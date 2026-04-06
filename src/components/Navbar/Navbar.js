@@ -45,7 +45,7 @@ export default function Navbar() {
       <div className={styles.logo}>
         <Link href="/">
           <Image
-            src="/LogoOrange.png"
+            src="/img/LogoOrange.png"
             alt="Abricot Logo"
             width={140}
             height={35}

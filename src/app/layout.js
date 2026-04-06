@@ -1,7 +1,5 @@
 import { Inter, Outfit } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar/Navbar';
-import Footer from '@/components/Footer/Footer';
 
 const inter = Inter({
   variable: '--font-sans',
@@ -22,14 +20,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${inter.variable} ${outfit.variable}`}>
-      <body
-        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-      >
-        <Navbar />
-        <main className="container view-container" style={{ flex: 1 }}>
-          {children}
-        </main>
-        <Footer />
+      <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {children}
       </body>
     </html>
   );
