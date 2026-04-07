@@ -66,7 +66,6 @@ export default async function Profile() {
               type="email"
               defaultValue={user.email}
               className={styles.input}
-              disabled
             />
           </div>
 

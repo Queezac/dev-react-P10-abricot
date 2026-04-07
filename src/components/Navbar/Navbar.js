@@ -37,8 +37,20 @@ const FolderIcon = () => (
   </svg>
 );
 
-export default function Navbar() {
+export default function Navbar({ user }) {
   const pathname = usePathname();
+
+  let initials = "AD";
+  if (user && user.name) {
+    const parts = user.name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    } else {
+      initials = user.name.substring(0, 2).toUpperCase();
+    }
+  } else if (user && user.email) {
+    initials = user.email.substring(0, 2).toUpperCase();
+  }
 
   return (
     <nav className={styles.navbar}>
@@ -73,8 +85,12 @@ export default function Navbar() {
       </div>
 
       <div className={styles.userActions}>
-        <Link href="/profile" className={styles.avatar}>
-          AD
+        <Link 
+          href="/profile" 
+          className={`${styles.avatar} ${pathname === '/profile' ? styles.avatarActive : ''}`} 
+          title={user?.name || user?.email || 'Profile'}
+        >
+          {initials}
         </Link>
       </div>
     </nav>

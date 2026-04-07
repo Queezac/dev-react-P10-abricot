@@ -79,7 +79,7 @@ const TaskCard = ({ task }) => (
         {getStatusLabel(task.status)}
       </span>
     </div>
-    
+
     <div className={styles.cardBottom}>
       <div className={styles.metaInfo}>
         <div className={styles.metaItem}>
@@ -97,7 +97,7 @@ const TaskCard = ({ task }) => (
           <span>{task.comments?.length || 0}</span>
         </div>
       </div>
-      
+
       <button className={styles.viewBtn}>
         Voir
       </button>
@@ -109,7 +109,7 @@ export default function DashboardView({ initialTasks = [] }) {
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'kanban'
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredTasks = initialTasks.filter((task) => 
+  const filteredTasks = initialTasks.filter((task) =>
     task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (task.description && task.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -156,7 +156,7 @@ export default function DashboardView({ initialTasks = [] }) {
               />
             </div>
           </div>
-          
+
           <div className={styles.taskList}>
             {filteredTasks.length > 0 ? (
               filteredTasks.map(task => <TaskCard key={task.id} task={task} />)

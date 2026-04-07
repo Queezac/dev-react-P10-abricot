@@ -37,19 +37,20 @@ export default function Register() {
             <Image
               src="/img/LogoOrange.png"
               alt="Abricot Logo"
-              width={150}
+              width={250}
               height={40}
               style={{ objectFit: 'contain' }}
+
               priority
             />
           </Link>
         </div>
-        
+
         <div className={styles.formContainer}>
           <h1 className={styles.title}>Inscription</h1>
-          
+
           {error && <div className={styles.errorBox}>{error}</div>}
-          
+
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.inputGroup}>
               <label htmlFor="email" className={styles.label}>Email</label>
@@ -61,7 +62,7 @@ export default function Register() {
                 className={styles.input}
               />
             </div>
-            
+
             <div className={styles.inputGroup}>
               <label htmlFor="password" className={styles.label}>Mot de passe</label>
               <input
@@ -81,6 +82,7 @@ export default function Register() {
               {loading ? 'Inscription en cours...' : "S'inscrire"}
             </button>
           </form>
+
         </div>
 
         <div className={styles.footer}>
