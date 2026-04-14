@@ -61,7 +61,6 @@ export default async function ProjectDetails({ params }) {
         <section className="card">
           <h2>Liste des tâches</h2>
           <div style={{ marginTop: '1rem' }}>
-            {/* Placeholder for task list */}
             <div
               style={{
                 padding: '1rem',

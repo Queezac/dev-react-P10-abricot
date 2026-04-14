@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import styles from './page.module.css';
 import { redirect } from 'next/navigation';
+import ProfileForm from './ProfileForm';
 
 export default async function Profile() {
   let user = null;
@@ -37,10 +38,6 @@ export default async function Profile() {
     );
   }
 
-  const names = user.name ? user.name.split(' ') : ['Utilisateur', ''];
-  const prenom = names[0];
-  const nom = names.slice(1).join(' ') || '';
-
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -49,40 +46,7 @@ export default async function Profile() {
           <p className={styles.subtitle}>{user.name || user.email}</p>
         </div>
 
-        <form className={styles.form}>
-          <div className={styles.field}>
-            <label className={styles.label}>Nom</label>
-            <input type="text" defaultValue={nom} className={styles.input} name="lastName" />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Prénom</label>
-            <input type="text" defaultValue={prenom} className={styles.input} name="firstName" />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Email</label>
-            <input
-              type="email"
-              defaultValue={user.email}
-              className={styles.input}
-            />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>Nouveau mot de passe</label>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className={styles.input}
-              name="password"
-            />
-          </div>
-
-          <button type="button" className={styles.button}>
-            Modifier les informations
-          </button>
-        </form>
+        <ProfileForm user={user} />
       </div>
     </div>
   );

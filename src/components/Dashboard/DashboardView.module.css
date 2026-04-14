@@ -8,12 +8,9 @@
 /* Tabs Toggle */
 .viewToggle {
   display: inline-flex;
-  background-color: white;
   border-radius: 8px;
   padding: 0.25rem;
-  gap: 0.25rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--border, #e4e4e7);
+  gap: 1rem;
   width: max-content;
 }
 
@@ -21,31 +18,30 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   border: none;
   background: transparent;
   border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #71717a;
+  color: #D3590B;
   cursor: pointer;
   transition: all 0.2s;
+  background-color: white;
 }
 
 .toggleBtnHover:hover {
-  background-color: #f4f4f5;
+  background-color: #FFE8D9;
 }
 
 .activeList {
-  background-color: #fff1f2;
-  /* Light red/orange */
-  color: var(--primary);
+  background-color: #FFE8D9;
+  color: #D3590B;
 }
 
 .activeKanban {
-  background-color: #fff7ed;
-  /* Light orange */
-  color: var(--primary);
+  background-color: #FFE8D9;
+  color: #D3590B;
 }
 
 /* List View Layout */
@@ -77,12 +73,12 @@
 
 .searchContainer {
   position: relative;
-  width: 300px;
+  width: 400px;
 }
 
 .searchIcon {
   position: absolute;
-  left: 0.75rem;
+  right: 2rem;
   top: 50%;
   transform: translateY(-50%);
   color: #a1a1aa;
@@ -90,7 +86,7 @@
 
 .searchInput {
   width: 100%;
-  padding: 0.625rem 1rem 0.625rem 2.5rem;
+  padding: 1.25rem 2rem;
   border-radius: 8px;
   border: 1px solid #e4e4e7;
   font-size: 0.875rem;
@@ -154,7 +150,7 @@
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
   transition: border-color 0.2s;
 }
 
@@ -170,6 +166,12 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 1rem;
+}
+
+.cardInfo {
+  flex: 1;
+  min-width: 0;
 }
 
 .cardInfo h3 {
@@ -190,6 +192,8 @@
   font-weight: 500;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .statusTODO {
@@ -212,6 +216,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.kanbanColumn .cardBottom {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.kanbanColumn .metaInfo {
+  align-self: flex-start;
+  flex-wrap: wrap;
 }
 
 .metaInfo {
@@ -237,7 +252,7 @@
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 0.5rem 1.5rem;
+  padding: 1rem 3rem;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;

@@ -21,6 +21,9 @@ export async function login(formData) {
     const json = await res.json();
 
     if (!res.ok) {
+      if (json.data?.errors?.length > 0) {
+        return { error: json.data.errors.map(e => e.message).join(' | ') };
+      }
       return { error: json.message || 'Erreur lors de la connexion' };
     }
 
@@ -49,6 +52,7 @@ export async function login(formData) {
 export async function register(formData) {
   const email = formData.get('email');
   const password = formData.get('password');
+  const name = formData.get('name'); // Récupération du nom
 
   try {
     const res = await fetch(`${API_URL}/auth/register`, {
@@ -56,13 +60,16 @@ export async function register(formData) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, name }),
     });
 
     const json = await res.json();
 
     if (!res.ok) {
-      return { error: json.message || 'Erreur lors de linscription' };
+      if (json.data?.errors?.length > 0) {
+        return { error: json.data.errors.map(e => e.message).join(' | ') };
+      }
+      return { error: json.message || "Erreur lors de l'inscription" };
     }
 
     const token = json.data?.token || json.token;
