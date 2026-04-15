@@ -1,102 +1,54 @@
-import Link from 'next/link';
+import { cookies } from 'next/headers';
+import ProjectDetailView from '@/components/Projects/ProjectDetailView';
+import { notFound } from 'next/navigation';
+
+async function fetchProject(id) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  if (!token) return null;
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/projects/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      next: { revalidate: 0 },
+    });
+    if (res.ok) {
+      const json = await res.json();
+      return json.data?.project || null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Erreur chargement projet:', error);
+    return null;
+  }
+}
+
+async function fetchProfile(token) {
+  if (!token) return null;
+  try {
+    const res = await fetch('http://127.0.0.1:8000/auth/profile', {
+      headers: { Authorization: `Bearer ${token}` },
+      next: { revalidate: 0 },
+    });
+    return res.ok ? (await res.json()).data?.user : null;
+  } catch (error) {
+    return null;
+  }
+}
 
 export default async function ProjectDetails({ params }) {
   const { id } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  
+  const [project, currentUser] = await Promise.all([
+    fetchProject(id),
+    fetchProfile(token)
+  ]);
 
-  return (
-    <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginBottom: '2rem',
-        }}
-      >
-        <div>
-          <Link
-            href="/projects"
-            style={{
-              fontSize: '0.9rem',
-              color: 'var(--muted-foreground)',
-              display: 'inline-block',
-              marginBottom: '0.5rem',
-            }}
-          >
-            ← Retour aux projets
-          </Link>
-          <h1>Détail du Projet #{id}</h1>
-          <p>La liste de toutes les tâches de ce projet s'affiche ici.</p>
-        </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <button className="btn btn-primary">Nouvelle Tâche</button>
-          <Link href={`/projects/${id}/settings`} className="btn btn-secondary">
-            Paramètres du projet
-          </Link>
-        </div>
-      </div>
+  if (!project) {
+    return notFound();
+  }
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
-        <section className="card">
-          <h2>Génération de tâches par l'IA</h2>
-          <p style={{ marginTop: '0.5rem', color: 'var(--muted-foreground)' }}>
-            Décrivez ce que vous souhaitez accomplir, l'IA d'Abricot se charge
-            de créer vos tâches !
-          </p>
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-            <input
-              type="text"
-              placeholder="Ex: Je dois créer une page de connexion avec React..."
-              style={{
-                flex: 1,
-                padding: '0.5rem',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border)',
-              }}
-            />
-            <button className="btn btn-primary">Générer avec l'IA</button>
-          </div>
-        </section>
-
-        <section className="card">
-          <h2>Liste des tâches</h2>
-          <div style={{ marginTop: '1rem' }}>
-            <div
-              style={{
-                padding: '1rem',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-md)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <div>
-                <h4>Création de la maquette</h4>
-                <span
-                  style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--muted-foreground)',
-                  }}
-                >
-                  Due: 12 Nov - Assigné à: Alice
-                </span>
-              </div>
-              <span
-                style={{
-                  fontSize: '0.8rem',
-                  padding: '0.2rem 0.6rem',
-                  backgroundColor: '#e2e8f0',
-                  color: '#1e293b',
-                  borderRadius: '1rem',
-                }}
-              >
-                À faire
-              </span>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
+  return <ProjectDetailView project={project} token={token} currentUser={currentUser} />;
 }

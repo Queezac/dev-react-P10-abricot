@@ -1,0 +1,151 @@
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  height: 100%;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0;
+  margin-bottom: 32px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.progressSection {
+  margin-bottom: 24px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+
+.progressLabel {
+  color: #666;
+}
+
+.progressPercent {
+  font-weight: 600;
+  color: #333;
+}
+
+.progressBarContainer {
+  height: 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: #e65100;
+  /* Primary brand orange */
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progressFooter {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.teamSection {
+  padding-top: 16px;
+}
+
+.teamHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.teamIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.teamMembersList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ownerGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.avatarOrange {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #ffe0b2;
+  /* Pale orange */
+  color: #e65100;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.labelOrange {
+  background-color: #ffe0b2;
+  color: #e65100;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.membersGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.avatarGrey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: #666;
+  font-size: 0.7rem;
+  font-weight: 600;
+}

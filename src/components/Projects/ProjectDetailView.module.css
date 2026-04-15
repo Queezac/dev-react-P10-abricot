@@ -1,0 +1,608 @@
+.container {
+  padding: 5vw;
+  background-color: transparent;
+  /* Use parent background */
+}
+
+/* HEADER SECTION */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #f5f5f5;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+}
+
+.editLink {
+  color: #e65100;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.description {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.btnDark {
+  background-color: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btnDark:hover {
+  opacity: 0.9;
+}
+
+.btnAI {
+  background-color: #e65100;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+
+.btnAI:hover {
+  opacity: 0.9;
+}
+
+.iconAI {
+  width: 16px;
+  height: 16px;
+}
+
+/* CONTRIBUTEURS SECTION */
+.contributorsBar {
+  background-color: #f6f6f6;
+  border-radius: 8px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.contributorsTitle {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.contributorsCount {
+  color: #888;
+  font-size: 0.9rem;
+  margin-right: 16px;
+}
+
+.contributorsList {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contributorOwner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.avatarOrange {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ffe0b2;
+  color: #e65100;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.tagOrange {
+  background-color: #ffe0b2;
+  color: #e65100;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.contributorMember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.avatarGrey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #555;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.tagGrey {
+  background-color: #eeeeee;
+  color: #555;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* TASKS CONTAINER */
+.tasksSection {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+}
+
+.tasksHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.tasksTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #333;
+}
+
+.tasksSubtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.tasksControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toggleGroup {
+  display: flex;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.toggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: white;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+}
+
+.toggleActive {
+  background-color: #ffe0b2;
+  color: #e65100;
+}
+
+.toggleActive svg {
+  color: #e65100;
+}
+
+.toggleIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.filterDropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 0.85rem;
+  color: #666;
+  cursor: pointer;
+}
+
+.dropdownIcon {
+  width: 16px;
+  height: 16px;
+  color: #aaa;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  width: 200px;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #aaa;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: #aaa;
+}
+
+/* TASKS LIST */
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 2rem;
+}
+
+.taskCard {
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 20px;
+  transition: box-shadow 0.2s;
+}
+
+.taskCard:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.taskTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.taskTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.badgeTodo {
+  background-color: #fce4e4;
+  color: #d32f2f;
+}
+
+.badgeProgress {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.badgeDone {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.taskMenuBtn {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.taskMenuBtn:hover {
+  color: #333;
+}
+
+.taskDesc {
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0 0 20px 0;
+}
+
+.taskMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.metaIcon {
+  width: 16px;
+  height: 16px;
+  color: #888;
+}
+
+.metaLabel {
+  color: #888;
+}
+
+.metaValue {
+  color: #333;
+  font-weight: 500;
+}
+
+.taskAssignees {
+  display: flex;
+  gap: 8px;
+}
+
+.assigneePill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f0f0f0;
+  border-radius: 12px;
+  padding: 2px 8px 2px 2px;
+}
+
+.avatarMini {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #555;
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+
+.assigneeName {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.taskFooter {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.commentBtn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.commentIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.emptyTasks {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px dashed #ccc;
+}
+
+/* COMMENTS SECTION */
+.commentsSection {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentItem, .addCommentBox {
+  display: flex;
+  gap: 12px;
+  background-color: #f4f5f7;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.commentAvatarSec {
+  flex-shrink: 0;
+}
+
+.avatarMiniUser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ffccbc;
+  color: #bf360c;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.commentItem .avatarMini {
+  width: 24px;
+  height: 24px;
+  font-size: 0.65rem;
+}
+
+.commentBody {
+  flex-grow: 1;
+}
+
+.commentHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.commentAuthorName {
+  font-weight: 500;
+  color: #172b4d;
+  font-size: 0.9rem;
+}
+
+.commentDate {
+  color: #7a869a;
+  font-size: 0.75rem;
+}
+
+.commentContent {
+  margin: 0;
+  color: #172b4d;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.addCommentForm {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #fafbfc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.addCommentTextarea {
+  width: 100%;
+  min-height: 60px;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.85rem;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+
+.addCommentTextarea::placeholder {
+  color: #7a869a;
+}
+
+.addCommentTextarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.addCommentActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.submitCommentBtn {
+  background-color: #e2e4e9;
+  color: #8c9bad;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitCommentBtn:not(:disabled) {
+  background-color: #e65100;
+  color: #fff;
+}
+
+.submitCommentBtn:not(:disabled):hover {
+  opacity: 0.9;
+}
