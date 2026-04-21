@@ -19,10 +19,11 @@ export default function ProjectCard({ project }) {
   const name = project?.name;
   const description = project?.description;
   
-  // Calcul de la progression des tâches
-  // Nous n'avons pas encore le nombre de tâches terminées depuis le backend, on simule 0
-  const totalTasks = project?._count?.tasks || 0;
-  const completedTasks = 0; 
+  // Calcul de la progression réelle des tâches depuis le backend
+  const tasks = project?.tasks || [];
+  const totalTasks = project?._count?.tasks || tasks.length || 0;
+  
+  const completedTasks = tasks.filter(t => t.status === 'DONE' || t.status === 'Terminée').length || 0;
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const totalMembers = 1 + (project?.members?.length || 0);

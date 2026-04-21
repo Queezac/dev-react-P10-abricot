@@ -52,6 +52,16 @@ export default function ProfileForm({ user }) {
       </div>
 
       <div className={styles.field}>
+        <label className={styles.label}>Mot de passe actuel</label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          className={styles.input}
+          name="currentPassword"
+        />
+      </div>
+
+      <div className={styles.field}>
         <label className={styles.label}>Nouveau mot de passe</label>
         <input
           type="password"

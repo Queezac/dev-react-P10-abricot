@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './TaskModal.module.css';
-import { updateTaskAction } from '@/app/actions/tasks';
+import { updateTaskAction, createTaskAction } from '@/app/actions/tasks';
 import { useToast } from '@/components/Toast/ToastContext';
 
 const ChevronDownIcon = () => (
@@ -20,21 +20,29 @@ const CalendarIcon = () => (
   </svg>
 );
 
-export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
+export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], projectId }) {
   const [title, setTitle] = useState(task.title || '');
   const [description, setDescription] = useState(task.description || '');
   const [dueDate, setDueDate] = useState(task.dueDate ? task.dueDate.split('T')[0] : '');
   const [status, setStatus] = useState(task.status || 'TODO');
-  const [assigneeId, setAssigneeId] = useState(task.assigneeId || '');
+  const initialAssignees = task.assignees 
+    ? task.assignees.map(a => a.user?.id || a.userId || a.id || a) 
+    : (task.assigneeId ? [task.assigneeId] : []);
+    
+  const [selectedAssignees, setSelectedAssignees] = useState(initialAssignees);
 
   const { addToast } = useToast();
 
-  // Simuler si la modale a des changements
-  const hasChanges = title !== (task.title || '') ||
-                     description !== (task.description || '') ||
-                     status !== (task.status || 'TODO') ||
-                     dueDate !== (task.dueDate ? task.dueDate.split('T')[0] : '') ||
-                     assigneeId !== (task.assigneeId || '');
+  const isCreateMode = !task.id;
+  const resolvedProjectId = task.projectId || task.project?.id || projectId;
+
+  const hasChanges = isCreateMode 
+                   ? (title.trim() !== '') 
+                   : (title !== (task.title || '') ||
+                      description !== (task.description || '') ||
+                      status !== (task.status || 'TODO') ||
+                      dueDate !== (task.dueDate ? task.dueDate.split('T')[0] : '') ||
+                      JSON.stringify(selectedAssignees.sort()) !== JSON.stringify(initialAssignees.sort()));
 
   const handleSave = async () => {
     if (!hasChanges) return;
@@ -43,19 +51,31 @@ export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
       description,
       status,
       dueDate,
-      assigneeId,
+      assigneeIds: selectedAssignees,
     };
     try {
-      const result = await updateTaskAction(task.project?.id || '', task.id, payload);
+      let result;
+      if (isCreateMode) {
+        result = await createTaskAction(resolvedProjectId, payload);
+      } else {
+        result = await updateTaskAction(resolvedProjectId, task.id, payload);
+      }
+      
       if (result?.error) {
         addToast(result.error, 'error');
       } else {
-        addToast('Tâche mise à jour avec succès', 'success');
-        onSave({ ...task, ...payload });
+        addToast(isCreateMode ? 'Tâche créée avec succès' : 'Tâche mise à jour avec succès', 'success');
+        onSave(result.task || { ...task, ...payload });
       }
     } catch (e) {
       addToast('Erreur lors de la mise à jour', 'error');
     }
+  };
+
+  const getDisplayName = (memberId) => {
+    const user = allUsers.find(u => u.id === memberId);
+    if (user) return user.name || user.email;
+    return typeof memberId === 'string' ? memberId : "ID inconnu";
   };
 
   return (
@@ -68,10 +88,10 @@ export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
           </svg>
         </button>
 
-        <h2 className={styles.title}>Modifier</h2>
+        <h2 className={styles.title}>{isCreateMode ? 'Créer une tâche' : 'Modifier'}</h2>
 
         <div className={styles.field}>
-          <label className={styles.label}>Titre</label>
+          <label className={styles.label}>Titre*</label>
           <input
             type="text"
             className={styles.input}
@@ -110,10 +130,19 @@ export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
           <div className={styles.inputField}>
             <select
               className={styles.select}
-              value={assigneeId}
-              onChange={(e) => setAssigneeId(e.target.value)}
+              value=""
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val && !selectedAssignees.includes(val)) {
+                  setSelectedAssignees([...selectedAssignees, val]);
+                }
+              }}
             >
-              <option value="">Sélectionner un collaborateur</option>
+              <option value="" disabled hidden>
+                {selectedAssignees.length > 0 
+                  ? `${selectedAssignees.length} collaborateur${selectedAssignees.length > 1 ? 's' : ''}` 
+                  : 'Sélectionner un collaborateur'}
+              </option>
               {allUsers.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.name || user.email}
@@ -124,6 +153,22 @@ export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
               <ChevronDownIcon />
             </div>
           </div>
+          {selectedAssignees.length > 0 && (
+            <div className={styles.selectedMembersList}>
+              {selectedAssignees.map(memberId => {
+                const displayName = getDisplayName(memberId);
+                return (
+                  <span key={memberId} className={styles.memberTag}>
+                    {displayName}
+                    <button 
+                      className={styles.removeMemberBtn} 
+                      onClick={() => setSelectedAssignees(selectedAssignees.filter(id => id !== memberId))}
+                    >×</button>
+                  </span>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         <div className={styles.field}>
@@ -150,13 +195,15 @@ export default function TaskModal({ task, onClose, onSave, allUsers = [] }) {
           </div>
         </div>
 
-        <button
-          className={`${styles.saveBtn} ${hasChanges ? styles.saveBtnActive : ''}`}
-          onClick={handleSave}
-          disabled={!hasChanges}
-        >
-          Enregistrer
-        </button>
+        <div className={styles.saveBtnWrapper}>
+          <button
+            className={`${styles.saveBtn} ${hasChanges ? styles.saveBtnActive : ''}`}
+            onClick={handleSave}
+            disabled={!hasChanges}
+          >
+            {isCreateMode ? '+ Ajouter une tâche' : 'Enregistrer'}
+          </button>
+        </div>
       </div>
     </div>
   );

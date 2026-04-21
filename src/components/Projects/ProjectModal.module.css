@@ -92,15 +92,6 @@
   position: relative;
 }
 
-.inputIcon {
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a1a1aa;
-  pointer-events: none;
-}
-
 .select {
   appearance: none;
   cursor: pointer;
@@ -113,49 +104,6 @@
   transform: translateY(-50%);
   pointer-events: none;
   color: #18181b;
-}
-
-.statusContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.statusBtn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.statusBtn:hover {
-  opacity: 0.8;
-}
-
-.statusTODO {
-  background-color: #fee2e2;
-  color: #ef4444;
-}
-
-.statusIN_PROGRESS {
-  background-color: #fef3c7;
-  color: #f59e0b;
-}
-
-.statusDONE {
-  background-color: #dcfce7;
-  color: #22c55e;
-}
-
-.activeStatus {
-  border-color: currentColor;
-  /* Highlight contour */
-}
-
-.inactiveStatus {
-  opacity: 0.4;
 }
 
 .saveBtnWrapper {

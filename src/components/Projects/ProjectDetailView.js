@@ -1,8 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from './ProjectDetailView.module.css';
+import ProjectModal from './ProjectModal';
+import TaskModal from '../Dashboard/TaskModal';
+import { fetchAllUsersAction } from '@/app/actions/users';
+import { deleteTaskAction } from '@/app/actions/tasks';
+import { updateProjectAction, deleteProjectAction, syncProjectMembersAction } from '@/app/actions/projects';
+import { createCommentAction, updateCommentAction, deleteCommentAction } from '@/app/actions/comments';
+import { useToast } from '@/components/Toast/ToastContext';
 
 function getInitials(user) {
   if (!user) return '??';
@@ -34,10 +42,57 @@ export default function ProjectDetailView({ project, token, currentUser }) {
   const [viewMode, setViewMode] = useState('list');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [taskModalState, setTaskModalState] = useState({ isOpen: false, task: null });
+  const [allUsers, setAllUsers] = useState([]);
+  const { addToast } = useToast();
+
+  useEffect(() => {
+    fetchAllUsersAction().then(res => {
+      if (res.users) setAllUsers(res.users);
+    });
+  }, []);
+
+  const router = useRouter();
+
+  const handleUpdateProject = async (payload) => {
+    const result = await updateProjectAction(project.id, payload);
+    if (result?.error) {
+      addToast(result.error, 'error');
+    } else {
+      // Sync members
+      const currentMemberIds = members.map(m => m.user?.id || m.userId);
+      await syncProjectMembersAction(project.id, payload.members || [], currentMemberIds);
+      addToast('Projet mis à jour avec succès !', 'success');
+      setIsEditModalOpen(false);
+      router.refresh();
+    }
+  };
+
+  const handleDeleteProject = async () => {
+    if (!confirm('Voulez-vous vraiment supprimer ce projet ? Cette action est irréversible.')) return;
+    const result = await deleteProjectAction(project.id);
+    if (result?.error) {
+      addToast(result.error, 'error');
+    } else {
+      addToast('Projet supprimé avec succès', 'success');
+      router.push('/projects');
+    }
+  };
 
   const owner = project?.owner;
   const members = project?.members || [];
   const tasks = project?.tasks || [];
+
+  const projectUsers = [];
+  if (owner && !projectUsers.find(u => u.id === owner.id)) {
+    projectUsers.push(owner);
+  }
+  members.forEach(m => {
+    if (m.user && !projectUsers.find(u => u.id === m.user.id)) {
+      projectUsers.push(m.user);
+    }
+  });
 
   const totalMembers = 1 + members.length;
 
@@ -81,7 +136,7 @@ export default function ProjectDetailView({ project, token, currentUser }) {
           <div>
             <div className={styles.titleRow}>
               <h1 className={styles.title}>{project?.name}</h1>
-              <a href="#" className={styles.editLink}>Modifier</a>
+              <button className={styles.editLink} onClick={() => setIsEditModalOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Modifier</button>
             </div>
             <p className={styles.description}>
               {project?.description}
@@ -89,7 +144,17 @@ export default function ProjectDetailView({ project, token, currentUser }) {
           </div>
         </div>
         <div className={styles.headerActions}>
-          <button className={styles.btnDark}>Créer une tâche</button>
+          <button className="btn btn-secondary" onClick={() => setTaskModalState({ isOpen: true, task: null })}>
+            Créer une tâche
+          </button>
+          <button
+            onClick={handleDeleteProject}
+            style={{ background: 'none', border: '1px solid #fca5a5', color: '#ef4444', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.875rem', cursor: 'pointer', transition: 'all 0.2s' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#fef2f2'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
+          >
+            Supprimer
+          </button>
           <button className={styles.btnAI}>
             <svg className={styles.iconAI} fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6L12 17.2l-6.2 4.5 2.4-7.6L2 9.6h7.6L12 2z" />
@@ -101,9 +166,10 @@ export default function ProjectDetailView({ project, token, currentUser }) {
 
       {/* SECTION CONTRIBUTEURS */}
       <div className={styles.contributorsBar}>
-        <span className={styles.contributorsTitle}>Contributeurs</span>
-        <span className={styles.contributorsCount}>{totalMembers} personnes</span>
-
+        <div className={styles.contributorsNumber}>
+          <span className={styles.contributorsTitle}>Contributeurs</span>
+          <span className={styles.contributorsCount}>{totalMembers} personnes</span>
+        </div>
         <div className={styles.contributorsList}>
           {/* Propriétaire */}
           <div className={styles.contributorOwner}>
@@ -187,22 +253,62 @@ export default function ProjectDetailView({ project, token, currentUser }) {
         <div className={styles.tasksList}>
           {sortedAndFilteredTasks.length > 0 ? (
             sortedAndFilteredTasks.map((task, idx) => (
-              <TaskItem key={idx} task={task} token={token} currentUser={currentUser} />
+              <TaskItem
+                key={task.id || idx}
+                task={task}
+                token={token}
+                currentUser={currentUser}
+                onEdit={() => setTaskModalState({ isOpen: true, task })}
+                onDelete={async () => {
+                  if (confirm("Voulez-vous vraiment supprimer cette tâche ?")) {
+                    const res = await deleteTaskAction(project.id, task.id);
+                    if (res?.error) {
+                      addToast(res.error, "error");
+                    } else {
+                      addToast("Tâche supprimée avec succès", "success");
+                    }
+                  }
+                }}
+              />
             ))
           ) : (
             <div className={styles.emptyTasks}>Aucune tâche correspondant à vos critères.</div>
           )}
         </div>
       </div>
+
+      {isEditModalOpen && (
+        <ProjectModal
+          project={project}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={handleUpdateProject}
+          allUsers={allUsers}
+        />
+      )}
+
+      {taskModalState.isOpen && (
+        <TaskModal
+          task={taskModalState.task || {}}
+          projectId={project?.id}
+          allUsers={projectUsers}
+          onClose={() => setTaskModalState({ isOpen: false, task: null })}
+          onSave={(updatedTask) => {
+            setTaskModalState({ isOpen: false, task: null });
+          }}
+        />
+      )}
     </div>
   );
 }
 
-function TaskItem({ task, token, currentUser }) {
+function TaskItem({ task, token, currentUser, onEdit, onDelete }) {
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [comments, setComments] = useState(task.comments || []);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editCommentContent, setEditCommentContent] = useState("");
 
   let statusBadgeClass = styles.badgeTodo;
   let statusLabel = "À faire";
@@ -224,18 +330,47 @@ function TaskItem({ task, token, currentUser }) {
     if (!newComment.trim() || isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/projects/${task.projectId}/tasks/${task.id}/comments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ content: newComment })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setComments([...comments, data.data.comment]);
+      const res = await createCommentAction(task.projectId, task.id, newComment);
+      if (res?.error) {
+        console.error(res.error);
+      } else if (res?.comment) {
+        setComments([...comments, res.comment]);
         setNewComment("");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdateComment = async (commentId) => {
+    if (!editCommentContent.trim() || isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const res = await updateCommentAction(task.projectId, task.id, commentId, editCommentContent);
+      if (res?.error) {
+        console.error(res.error);
+      } else if (res?.comment) {
+        setComments(comments.map(c => c.id === commentId ? res.comment : c));
+        setEditingCommentId(null);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!confirm("Voulez-vous supprimer ce commentaire ?")) return;
+    setIsSubmitting(true);
+    try {
+      const res = await deleteCommentAction(task.projectId, task.id, commentId);
+      if (res?.error) {
+        console.error(res.error);
+      } else {
+        setComments(comments.filter(c => c.id !== commentId));
       }
     } catch (err) {
       console.error(err);
@@ -251,11 +386,39 @@ function TaskItem({ task, token, currentUser }) {
           <h3 className={styles.taskTitle}>{task.title}</h3>
           <span className={`${styles.badge} ${statusBadgeClass}`}>{statusLabel}</span>
         </div>
-        <button className={styles.taskMenuBtn}>
-          <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16">
-            <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-          </svg>
-        </button>
+        <div style={{ position: 'relative' }}>
+          <button className={styles.taskMenuBtn} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16">
+              <path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+            </svg>
+          </button>
+
+          {isMenuOpen && (
+            <div className={styles.taskDropdownMenu}>
+              <div className={styles.taskDropdownHeader}>
+                <h4 className={styles.taskDropdownTitle}>{task.title}</h4>
+                <p className={styles.taskDropdownDesc}>{task.description || "Aucune description"}</p>
+              </div>
+              <div className={styles.taskDropdownActions}>
+                <button
+                  onClick={() => { setIsMenuOpen(false); onDelete(); }}
+                  className={styles.taskDropdownItemDelete}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  Supprimer
+                </button>
+                <div className={styles.taskDropdownDivider}></div>
+                <button
+                  onClick={() => { setIsMenuOpen(false); onEdit(); }}
+                  className={styles.taskDropdownItemEdit}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  Modifier
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <p className={styles.taskDesc}>
@@ -304,33 +467,55 @@ function TaskItem({ task, token, currentUser }) {
                 <div className={styles.commentHeaderRow}>
                   <span className={styles.commentAuthorName}>{c.author?.name || c.author?.email || "Utilisateur"}</span>
                   <span className={styles.commentDate}>{c.createdAt ? formatDateTime(c.createdAt) : ""}</span>
+                  {currentUser?.id === c.authorId && (
+                    <div className={styles.commentActions}>
+                      <button className={styles.commentActionBtn} onClick={() => { setEditingCommentId(c.id); setEditCommentContent(c.content); }}>Modifier</button>
+                      <button className={styles.commentActionBtn} onClick={() => handleDeleteComment(c.id)}>Supprimer</button>
+                    </div>
+                  )}
                 </div>
-                <p className={styles.commentContent}>{c.content}</p>
+                {editingCommentId === c.id ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <textarea 
+                      className={styles.addCommentTextarea} 
+                      value={editCommentContent} 
+                      onChange={e => setEditCommentContent(e.target.value)} 
+                    />
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                      <button className={styles.btnSecondary} onClick={() => setEditingCommentId(null)} style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer', border: '1px solid #e4e4e7', background: 'none' }}>Annuler</button>
+                      <button onClick={() => handleUpdateComment(c.id)} style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer', background: '#18181b', color: 'white', border: 'none' }} disabled={isSubmitting}>Enregistrer</button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className={styles.commentContent}>{c.content}</p>
+                )}
               </div>
             </div>
           ))}
 
           <div className={styles.addCommentBox}>
-            <div className={styles.commentAvatarSec}>
-              <span className={styles.avatarMiniUser}>{getInitials(currentUser)}</span>
-            </div>
-            <div className={styles.addCommentForm}>
-              <textarea
-                className={styles.addCommentTextarea}
-                placeholder="Ajouter un commentaire..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                disabled={isSubmitting}
-              />
-              <div className={styles.addCommentActions}>
-                <button
-                  className={styles.submitCommentBtn}
-                  onClick={handleAddComment}
-                  disabled={isSubmitting || !newComment.trim()}
-                >
-                  Envoyer
-                </button>
+            <div className={styles.addCommentBoxInner}>
+              <div className={styles.commentAvatarSec}>
+                <span className={styles.avatarMiniUser}>{getInitials(currentUser)}</span>
               </div>
+              <div className={styles.addCommentForm}>
+                <textarea
+                  className={styles.addCommentTextarea}
+                  placeholder="Ajouter un commentaire..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  disabled={isSubmitting}
+                />
+              </div>
+            </div>
+            <div className={styles.addCommentActions}>
+              <button
+                className={styles.submitCommentBtn}
+                onClick={handleAddComment}
+                disabled={isSubmitting || !newComment.trim()}
+              >
+                Envoyer
+              </button>
             </div>
           </div>
         </div>

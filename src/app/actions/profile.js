@@ -9,8 +9,7 @@ export async function updateProfile(formData) {
   const firstName = formData.get('firstName') || '';
   const lastName = formData.get('lastName') || '';
   const email = formData.get('email');
-  
-  // Combine prenom and nom to form 'name' as expected by backend updateProfile
+
   const name = `${firstName} ${lastName}`.trim();
 
   const cookieStore = await cookies();
@@ -37,6 +36,28 @@ export async function updateProfile(formData) {
         return { error: json.data.errors.map(e => e.message).join(' | ') };
       }
       return { error: json.message || 'Erreur lors de la mise à jour' };
+    }
+
+    // Passwords update
+    const newPassword = formData.get('password');
+    const currentPassword = formData.get('currentPassword');
+    
+    if (newPassword && newPassword.length > 0) {
+      if (!currentPassword) {
+         return { error: "Mot de passe actuel requis pour modifier le mot de passe" };
+      }
+      const passRes = await fetch(`${API_URL}/auth/password`, {
+         method: 'PUT',
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const passJson = await passRes.json();
+      if (!passRes.ok) {
+          return { error: passJson.message || "Erreur lors de la modification du mot de passe" };
+      }
     }
 
     revalidatePath('/profile');

@@ -29,23 +29,6 @@ async function fetchProjects() {
 export default async function Projects() {
   const projects = await fetchProjects();
 
-  // Si on veut forcer l'affichage avec des fausses données (mocks) en cas de 0 projets,
-  // ou si la BDD est vide, on peut décommenter ce code pour simuler :
-  /*
-  if (projects.length === 0) {
-    projects.push(
-      ...Array(6).fill(null).map((_, i) => ({
-        id: `mock-${i}`,
-        name: "Développement de la nouvelle version de l'API REST avec authentification JWT",
-        description: "Développement de la nouvelle version de l'API REST avec authentification JWT",
-        owner: { name: "A D" },
-        members: [{ user: { name: "B C" } }, { user: { name: "C V" } }],
-        _count: { tasks: 2 }
-      }))
-    );
-  }
-  */
-
   return (
     <div className={styles.project}>
       <PageHeader title="Mes projets" subtitle="Gérez vos projets" />

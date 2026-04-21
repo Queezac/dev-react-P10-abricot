@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './DashboardView.module.css';
 import TaskModal from './TaskModal';
+import { fetchAllUsersAction } from '@/app/actions/users';
 
 const ListIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -108,12 +109,13 @@ export default function DashboardView({ initialTasks = [] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState(null);
 
-  // Pour l'instant on simule l'existence des autres utilisateurs
-  const allUsers = [
-    { id: '1', name: 'Salomé', email: 'salome@example.com' },
-    { id: '2', name: 'John Doe', email: 'john@example.com' },
-    { id: '3', name: 'Alice', email: 'alice@example.com' }
-  ];
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    fetchAllUsersAction().then(res => {
+      if (res.users) setAllUsers(res.users);
+    });
+  }, []);
 
   const handleUpdateTask = (updatedTask) => {
     // Appel API à faire plus tard pour mettre à jour la tâche
