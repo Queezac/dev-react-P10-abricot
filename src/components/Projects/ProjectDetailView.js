@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation';
 import styles from './ProjectDetailView.module.css';
 import ProjectModal from './ProjectModal';
 import TaskModal from '../Dashboard/TaskModal';
+import AiTaskModal from './AiTaskModal';
 import { fetchAllUsersAction } from '@/app/actions/users';
-import { deleteTaskAction } from '@/app/actions/tasks';
+import { generateAITasksAction } from '@/app/actions/ai';
+import { deleteTaskAction, updateTaskAction } from '@/app/actions/tasks';
 import { updateProjectAction, deleteProjectAction, syncProjectMembersAction } from '@/app/actions/projects';
 import { createCommentAction, updateCommentAction, deleteCommentAction } from '@/app/actions/comments';
 import { useToast } from '@/components/Toast/ToastContext';
@@ -43,6 +45,7 @@ export default function ProjectDetailView({ project, token, currentUser }) {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [taskModalState, setTaskModalState] = useState({ isOpen: false, task: null });
   const [allUsers, setAllUsers] = useState([]);
   const { addToast } = useToast();
@@ -69,6 +72,62 @@ export default function ProjectDetailView({ project, token, currentUser }) {
     }
   };
 
+  const handleGenerateAITasks = async (prompt) => {
+    const result = await generateAITasksAction(project.id, prompt);
+    if (result?.error) {
+      addToast(result.error, 'error');
+      throw new Error(result.error);
+    } else {
+      return result.tasks;
+    }
+  };
+
+  const handleSaveAITasks = async (tasksToSave) => {
+    try {
+      let successCount = 0;
+      for (const task of tasksToSave) {
+        const result = await createTaskAction(project.id, {
+          title: task.title,
+          description: task.description,
+          status: task.status || 'TODO',
+        });
+        if (!result.error) {
+          successCount++;
+        }
+      }
+
+      if (successCount === 0) {
+        addToast('Impossible d\'enregistrer les tâches', 'error');
+        throw new Error('Aucune tâche n\'a pu être enregistrée');
+      }
+
+      addToast(`${successCount} tâches générées avec succès !`, 'success');
+      router.refresh();
+      setIsAiModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+  const handleDeleteExistingTask = async (taskId) => {
+    if (!confirm('Voulez-vous vraiment supprimer cette tâche ?')) return;
+    const res = await deleteTaskAction(project.id, taskId);
+    if (res?.error) {
+      addToast(res.error, 'error');
+    } else {
+      addToast('Tâche supprimée', 'success');
+      router.refresh();
+    }
+  };
+
+  const handleUpdateExistingTask = async (taskId, updatedData) => {
+    const res = await updateTaskAction(project.id, taskId, updatedData);
+    if (res?.error) {
+      addToast(res.error, 'error');
+    } else {
+      router.refresh();
+    }
+  };
   const handleDeleteProject = async () => {
     if (!confirm('Voulez-vous vraiment supprimer ce projet ? Cette action est irréversible.')) return;
     const result = await deleteProjectAction(project.id);
@@ -155,7 +214,7 @@ export default function ProjectDetailView({ project, token, currentUser }) {
           >
             Supprimer
           </button>
-          <button className={styles.btnAI}>
+          <button className={styles.btnAI} onClick={() => setIsAiModalOpen(true)}>
             <svg className={styles.iconAI} fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6L12 17.2l-6.2 4.5 2.4-7.6L2 9.6h7.6L12 2z" />
             </svg>
@@ -295,6 +354,18 @@ export default function ProjectDetailView({ project, token, currentUser }) {
           onSave={(updatedTask) => {
             setTaskModalState({ isOpen: false, task: null });
           }}
+        />
+      )}
+
+      {isAiModalOpen && (
+        <AiTaskModal 
+          isOpen={isAiModalOpen} 
+          onClose={() => setIsAiModalOpen(false)} 
+          onGenerate={handleGenerateAITasks}
+          onSave={handleSaveAITasks}
+          existingTasks={tasks}
+          onDeleteExisting={handleDeleteExistingTask}
+          onUpdateExisting={handleUpdateExistingTask}
         />
       )}
     </div>

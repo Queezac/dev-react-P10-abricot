@@ -2,13 +2,15 @@ import { cookies } from 'next/headers';
 import ProjectDetailView from '@/components/Projects/ProjectDetailView';
 import { notFound } from 'next/navigation';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function fetchProject(id) {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   if (!token) return null;
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/projects/${id}`, {
+    const res = await fetch(`${API_URL}/projects/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
       next: { revalidate: 0 },
     });
@@ -26,7 +28,7 @@ async function fetchProject(id) {
 async function fetchProfile(token) {
   if (!token) return null;
   try {
-    const res = await fetch('http://127.0.0.1:8000/auth/profile', {
+    const res = await fetch(`${API_URL}/auth/profile`, {
       headers: { Authorization: `Bearer ${token}` },
       next: { revalidate: 0 },
     });

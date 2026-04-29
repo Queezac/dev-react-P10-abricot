@@ -3,6 +3,8 @@ import styles from './page.module.css';
 import PageHeader from '@/components/PageHeader/PageHeader';
 import DashboardView from '@/components/Dashboard/DashboardView';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function fetchDashboardData() {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
@@ -12,11 +14,11 @@ async function fetchDashboardData() {
   try {
     // Paralléliser les deux requêtes
     const [profileRes, tasksRes] = await Promise.all([
-      fetch('http://127.0.0.1:8000/auth/profile', {
+      fetch(`${API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },
         next: { revalidate: 0 },
       }),
-      fetch('http://127.0.0.1:8000/dashboard/assigned-tasks', {
+      fetch(`${API_URL}/dashboard/assigned-tasks`, {
         headers: { Authorization: `Bearer ${token}` },
         next: { revalidate: 0 },
       }),

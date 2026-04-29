@@ -3,6 +3,8 @@ import styles from './page.module.css';
 import PageHeader from '@/components/PageHeader/PageHeader';
 import ProjectGrid from '@/components/Projects/ProjectGrid';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function fetchProjects() {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
@@ -10,7 +12,7 @@ async function fetchProjects() {
   if (!token) return [];
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/projects', {
+    const res = await fetch(`${API_URL}/projects`, {
       headers: { Authorization: `Bearer ${token}` },
       next: { revalidate: 0 },
     });

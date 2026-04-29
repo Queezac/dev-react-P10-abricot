@@ -3,6 +3,8 @@ import styles from './page.module.css';
 import { redirect } from 'next/navigation';
 import ProfileForm from './ProfileForm';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default async function Profile() {
   let user = null;
   let debugError = null;
@@ -12,7 +14,7 @@ export default async function Profile() {
     const token = cookieStore.get('token')?.value;
     if (!token) debugError = "Token non trouvé dans les cookies";
     else {
-      const res = await fetch('http://127.0.0.1:8000/auth/profile', {
+      const res = await fetch(`${API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },
         next: { revalidate: 0 }
       });

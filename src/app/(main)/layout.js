@@ -2,6 +2,8 @@ import Navbar from '@/components/Navbar/Navbar';
 import Footer from '@/components/Footer/Footer';
 import { cookies } from 'next/headers';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 async function fetchProfileData() {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
@@ -9,7 +11,7 @@ async function fetchProfileData() {
   if (!token) return null;
 
   try {
-    const res = await fetch('http://127.0.0.1:8000/auth/profile', {
+    const res = await fetch(`${API_URL}/auth/profile`, {
       headers: { Authorization: `Bearer ${token}` },
       next: { revalidate: 0 },
     });
