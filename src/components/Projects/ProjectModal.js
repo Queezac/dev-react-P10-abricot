@@ -20,7 +20,6 @@ export default function ProjectModal({ project, onClose, onSave, allUsers = [] }
   const titleText = isEditing ? 'Modifier un projet' : 'Créer un projet';
   const buttonText = isEditing ? 'Enregistrer' : 'Ajouter un projet';
 
-  // Basic diff check for edit mode
   const initialMembers = project?.members ? project.members.map(m => m.user?.id || m.userId || m.id || m) : [];
   const hasChanges = title !== (project?.name || '') ||
     description !== (project?.description || '') ||

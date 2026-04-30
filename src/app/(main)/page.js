@@ -12,7 +12,6 @@ async function fetchDashboardData() {
   if (!token) return { user: null, tasks: [] };
 
   try {
-    // Paralléliser les deux requêtes
     const [profileRes, tasksRes] = await Promise.all([
       fetch(`${API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },

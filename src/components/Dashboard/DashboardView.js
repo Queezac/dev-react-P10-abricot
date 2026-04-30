@@ -105,7 +105,7 @@ const TaskCard = ({ task, onEdit }) => (
 );
 
 export default function DashboardView({ initialTasks = [] }) {
-  const [viewMode, setViewMode] = useState('list'); // 'list' | 'kanban'
+  const [viewMode, setViewMode] = useState('list');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -118,7 +118,6 @@ export default function DashboardView({ initialTasks = [] }) {
   }, []);
 
   const handleUpdateTask = (updatedTask) => {
-    // Appel API à faire plus tard pour mettre à jour la tâche
     console.log("Tâche modifiée:", updatedTask);
     setSelectedTask(null);
   };

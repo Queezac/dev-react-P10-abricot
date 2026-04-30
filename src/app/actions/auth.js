@@ -52,7 +52,7 @@ export async function login(formData) {
 export async function register(formData) {
   const email = formData.get('email');
   const password = formData.get('password');
-  const name = formData.get('name'); // Récupération du nom
+  const name = formData.get('name');
 
   try {
     const res = await fetch(`${API_URL}/auth/register`, {

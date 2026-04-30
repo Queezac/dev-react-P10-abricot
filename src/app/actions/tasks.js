@@ -14,7 +14,6 @@ export async function updateTaskAction(projectId, taskId, data) {
       return { error: 'Non authentifié' };
     }
 
-    // Le backend attend potentiellement title, description, status, dueDate, assigneeIds
     const updatePayload = {
       title: data.title,
       description: data.description,

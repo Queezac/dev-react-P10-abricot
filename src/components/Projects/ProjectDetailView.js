@@ -63,7 +63,6 @@ export default function ProjectDetailView({ project, token, currentUser }) {
     if (result?.error) {
       addToast(result.error, 'error');
     } else {
-      // Sync members
       const currentMemberIds = members.map(m => m.user?.id || m.userId);
       await syncProjectMembersAction(project.id, payload.members || [], currentMemberIds);
       addToast('Projet mis à jour avec succès !', 'success');

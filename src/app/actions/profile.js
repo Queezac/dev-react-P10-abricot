@@ -38,25 +38,24 @@ export async function updateProfile(formData) {
       return { error: json.message || 'Erreur lors de la mise à jour' };
     }
 
-    // Passwords update
     const newPassword = formData.get('password');
     const currentPassword = formData.get('currentPassword');
-    
+
     if (newPassword && newPassword.length > 0) {
       if (!currentPassword) {
-         return { error: "Mot de passe actuel requis pour modifier le mot de passe" };
+        return { error: "Mot de passe actuel requis pour modifier le mot de passe" };
       }
       const passRes = await fetch(`${API_URL}/auth/password`, {
-         method: 'PUT',
-         headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-         },
-         body: JSON.stringify({ currentPassword, newPassword }),
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
       const passJson = await passRes.json();
       if (!passRes.ok) {
-          return { error: passJson.message || "Erreur lors de la modification du mot de passe" };
+        return { error: passJson.message || "Erreur lors de la modification du mot de passe" };
       }
     }
 

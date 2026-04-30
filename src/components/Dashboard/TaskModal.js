@@ -25,10 +25,10 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
   const [description, setDescription] = useState(task.description || '');
   const [dueDate, setDueDate] = useState(task.dueDate ? task.dueDate.split('T')[0] : '');
   const [status, setStatus] = useState(task.status || 'TODO');
-  const initialAssignees = task.assignees 
-    ? task.assignees.map(a => a.user?.id || a.userId || a.id || a) 
+  const initialAssignees = task.assignees
+    ? task.assignees.map(a => a.user?.id || a.userId || a.id || a)
     : (task.assigneeId ? [task.assigneeId] : []);
-    
+
   const [selectedAssignees, setSelectedAssignees] = useState(initialAssignees);
 
   const { addToast } = useToast();
@@ -36,13 +36,13 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
   const isCreateMode = !task.id;
   const resolvedProjectId = task.projectId || task.project?.id || projectId;
 
-  const hasChanges = isCreateMode 
-                   ? (title.trim() !== '') 
-                   : (title !== (task.title || '') ||
-                      description !== (task.description || '') ||
-                      status !== (task.status || 'TODO') ||
-                      dueDate !== (task.dueDate ? task.dueDate.split('T')[0] : '') ||
-                      JSON.stringify(selectedAssignees.sort()) !== JSON.stringify(initialAssignees.sort()));
+  const hasChanges = isCreateMode
+    ? (title.trim() !== '')
+    : (title !== (task.title || '') ||
+      description !== (task.description || '') ||
+      status !== (task.status || 'TODO') ||
+      dueDate !== (task.dueDate ? task.dueDate.split('T')[0] : '') ||
+      JSON.stringify(selectedAssignees.sort()) !== JSON.stringify(initialAssignees.sort()));
 
   const handleSave = async () => {
     if (!hasChanges) return;
@@ -60,7 +60,7 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
       } else {
         result = await updateTaskAction(resolvedProjectId, task.id, payload);
       }
-      
+
       if (result?.error) {
         addToast(result.error, 'error');
       } else {
@@ -120,8 +120,7 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
-            {/* Si c'était un input standard text avec icône, mais input type="date" a souvent sa propre icône. 
-                On laisse la possibilité d'utiliser l'icône de calendrier à droite si on masque celle par défaut. */}
+
           </div>
         </div>
 
@@ -139,8 +138,8 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
               }}
             >
               <option value="" disabled hidden>
-                {selectedAssignees.length > 0 
-                  ? `${selectedAssignees.length} collaborateur${selectedAssignees.length > 1 ? 's' : ''}` 
+                {selectedAssignees.length > 0
+                  ? `${selectedAssignees.length} collaborateur${selectedAssignees.length > 1 ? 's' : ''}`
                   : 'Sélectionner un collaborateur'}
               </option>
               {allUsers.map((user) => (
@@ -160,8 +159,8 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
                 return (
                   <span key={memberId} className={styles.memberTag}>
                     {displayName}
-                    <button 
-                      className={styles.removeMemberBtn} 
+                    <button
+                      className={styles.removeMemberBtn}
                       onClick={() => setSelectedAssignees(selectedAssignees.filter(id => id !== memberId))}
                     >×</button>
                   </span>

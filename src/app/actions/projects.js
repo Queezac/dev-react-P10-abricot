@@ -24,7 +24,6 @@ export async function createProjectAction(data) {
     const json = await res.json();
     if (!res.ok) return { error: json.message || 'Erreur lors de la création du projet' };
 
-    // Add members one by one after creation
     if (data.members && data.members.length > 0 && json.data?.project?.id) {
       const projectId = json.data.project.id;
       for (const userId of data.members) {
@@ -84,7 +83,6 @@ export async function deleteProjectAction(projectId) {
   }
 }
 
-// Internal helper: add a contributor by userId (fetches their email first)
 async function addContributorByIdAction(projectId, userId, token) {
   try {
     const usersRes = await fetch(`${API_URL}/users`, {
@@ -110,7 +108,6 @@ export async function syncProjectMembersAction(projectId, newMemberIds, currentM
     const token = await getToken();
     if (!token) return { error: 'Non authentifié' };
 
-    // Fetch all users to get emails
     const usersRes = await fetch(`${API_URL}/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });

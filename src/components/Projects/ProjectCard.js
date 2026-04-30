@@ -18,19 +18,18 @@ function getInitials(user) {
 export default function ProjectCard({ project }) {
   const name = project?.name;
   const description = project?.description;
-  
-  // Calcul de la progression réelle des tâches depuis le backend
+
   const tasks = project?.tasks || [];
   const totalTasks = project?._count?.tasks || tasks.length || 0;
-  
+
   const completedTasks = tasks.filter(t => t.status === 'DONE' || t.status === 'Terminée').length || 0;
   const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   const totalMembers = 1 + (project?.members?.length || 0);
 
   return (
-    <Link 
-      href={`/projects/${project?.id || '#'}`} 
+    <Link
+      href={`/projects/${project?.id || '#'}`}
       className={styles.card}
       style={{ textDecoration: 'none', color: 'inherit' }}
     >
@@ -43,8 +42,8 @@ export default function ProjectCard({ project }) {
           <span className={styles.progressPercent}>{progressPercent}%</span>
         </div>
         <div className={styles.progressBarContainer}>
-          <div 
-            className={styles.progressBarFill} 
+          <div
+            className={styles.progressBarFill}
             style={{ width: `${progressPercent}%` }}
           ></div>
         </div>
@@ -68,7 +67,7 @@ export default function ProjectCard({ project }) {
           {project?.members && project.members.length > 0 && (
             <div className={styles.membersGroup}>
               {project.members.slice(0, 3).map((m, idx) => (
-                 <span key={idx} className={styles.avatarGrey}>{getInitials(m.user)}</span>
+                <span key={idx} className={styles.avatarGrey}>{getInitials(m.user)}</span>
               ))}
               {project.members.length > 3 && (
                 <span className={styles.avatarGrey}>+{project.members.length - 3}</span>
