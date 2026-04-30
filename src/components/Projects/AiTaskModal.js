@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import styles from './AiTaskModal.module.css';
 
-export default function AiTaskModal({ 
-  isOpen, 
-  onClose, 
-  onGenerate, 
-  onSave, 
+export default function AiTaskModal({
+  isOpen,
+  onClose,
+  onGenerate,
+  onSave,
   existingTasks = [],
   onDeleteExisting,
   onUpdateExisting
@@ -17,7 +17,7 @@ export default function AiTaskModal({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
   const [generatedTasks, setGeneratedTasks] = useState([]);
-  
+
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDesc, setEditDesc] = useState('');
@@ -113,7 +113,7 @@ export default function AiTaskModal({
 
         <div className={styles.content}>
           {error && <div className={styles.errorMessage}>{error}</div>}
-          
+
           {allTasks.length > 0 && (
             <div className={styles.tasksList}>
               {allTasks.map((t) => {
@@ -124,17 +124,17 @@ export default function AiTaskModal({
                   <div className={styles.taskItem} key={uniqueId}>
                     {isEditing ? (
                       <div className={styles.editingForm}>
-                        <input 
-                          type="text" 
-                          className={styles.editInput} 
-                          value={editTitle} 
-                          onChange={(e) => setEditTitle(e.target.value)} 
+                        <input
+                          type="text"
+                          className={styles.editInput}
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
                           placeholder="Nom de la tâche"
                         />
-                        <textarea 
-                          className={styles.editTextarea} 
-                          value={editDesc} 
-                          onChange={(e) => setEditDesc(e.target.value)} 
+                        <textarea
+                          className={styles.editTextarea}
+                          value={editDesc}
+                          onChange={(e) => setEditDesc(e.target.value)}
                           placeholder="Description de la tâche"
                         />
                         <div className={styles.editActions}>
@@ -162,12 +162,12 @@ export default function AiTaskModal({
                   </div>
                 );
               })}
-              
+
               {generatedTasks.length > 0 && (
                 <div className={styles.saveContainer}>
-                  <button 
-                    className={styles.saveBtn} 
-                    onClick={handleSaveTasks} 
+                  <button
+                    className={styles.saveBtn}
+                    onClick={handleSaveTasks}
                     disabled={isSaving}
                   >
                     {isSaving ? "Ajout en cours..." : "+ Ajouter les tâches"}
@@ -195,13 +195,13 @@ export default function AiTaskModal({
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isLoading || isSaving}
             />
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={styles.submitButton}
               disabled={!prompt.trim() || isLoading || isSaving}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </button>
           </form>

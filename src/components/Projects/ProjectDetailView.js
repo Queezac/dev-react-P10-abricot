@@ -9,7 +9,7 @@ import TaskModal from '../Dashboard/TaskModal';
 import AiTaskModal from './AiTaskModal';
 import { fetchAllUsersAction } from '@/app/actions/users';
 import { generateAITasksAction } from '@/app/actions/ai';
-import { deleteTaskAction, updateTaskAction } from '@/app/actions/tasks';
+import { deleteTaskAction, updateTaskAction, createTaskAction } from '@/app/actions/tasks';
 import { updateProjectAction, deleteProjectAction, syncProjectMembersAction } from '@/app/actions/projects';
 import { createCommentAction, updateCommentAction, deleteCommentAction } from '@/app/actions/comments';
 import { useToast } from '@/components/Toast/ToastContext';
@@ -73,6 +73,7 @@ export default function ProjectDetailView({ project, token, currentUser }) {
   };
 
   const handleGenerateAITasks = async (prompt) => {
+
     const result = await generateAITasksAction(project.id, prompt);
     if (result?.error) {
       addToast(result.error, 'error');
@@ -85,12 +86,14 @@ export default function ProjectDetailView({ project, token, currentUser }) {
   const handleSaveAITasks = async (tasksToSave) => {
     try {
       let successCount = 0;
+      console.log("test");
       for (const task of tasksToSave) {
         const result = await createTaskAction(project.id, {
           title: task.title,
           description: task.description,
           status: task.status || 'TODO',
         });
+        console.log(result);
         if (!result.error) {
           successCount++;
         }
@@ -358,9 +361,9 @@ export default function ProjectDetailView({ project, token, currentUser }) {
       )}
 
       {isAiModalOpen && (
-        <AiTaskModal 
-          isOpen={isAiModalOpen} 
-          onClose={() => setIsAiModalOpen(false)} 
+        <AiTaskModal
+          isOpen={isAiModalOpen}
+          onClose={() => setIsAiModalOpen(false)}
           onGenerate={handleGenerateAITasks}
           onSave={handleSaveAITasks}
           existingTasks={tasks}
@@ -547,10 +550,10 @@ function TaskItem({ task, token, currentUser, onEdit, onDelete }) {
                 </div>
                 {editingCommentId === c.id ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <textarea 
-                      className={styles.addCommentTextarea} 
-                      value={editCommentContent} 
-                      onChange={e => setEditCommentContent(e.target.value)} 
+                    <textarea
+                      className={styles.addCommentTextarea}
+                      value={editCommentContent}
+                      onChange={e => setEditCommentContent(e.target.value)}
                     />
                     <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                       <button className={styles.btnSecondary} onClick={() => setEditingCommentId(null)} style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer', border: '1px solid #e4e4e7', background: 'none' }}>Annuler</button>
