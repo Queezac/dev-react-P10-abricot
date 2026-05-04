@@ -91,8 +91,9 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
         <h2 className={styles.title}>{isCreateMode ? 'Créer une tâche' : 'Modifier'}</h2>
 
         <div className={styles.field}>
-          <label className={styles.label}>Titre*</label>
+          <label htmlFor="task-title" className={styles.label}>Titre*</label>
           <input
+            id="task-title"
             type="text"
             className={styles.input}
             value={title}
@@ -102,8 +103,9 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Description</label>
+          <label htmlFor="task-description" className={styles.label}>Description</label>
           <textarea
+            id="task-description"
             className={styles.textarea}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -112,9 +114,10 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Échéance</label>
+          <label htmlFor="task-dueDate" className={styles.label}>Échéance</label>
           <div className={styles.inputField}>
             <input
+              id="task-dueDate"
               type="date"
               className={styles.input}
               value={dueDate}
@@ -125,9 +128,10 @@ export default function TaskModal({ task = {}, onClose, onSave, allUsers = [], p
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Assigné à :</label>
+          <label htmlFor="task-assignees" className={styles.label}>Assigné à :</label>
           <div className={styles.inputField}>
             <select
+              id="task-assignees"
               className={styles.select}
               value=""
               onChange={(e) => {

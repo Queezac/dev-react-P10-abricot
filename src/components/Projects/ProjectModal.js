@@ -63,8 +63,9 @@ export default function ProjectModal({ project, onClose, onSave, allUsers = [] }
         <h2 className={styles.title}>{titleText}</h2>
 
         <div className={styles.field}>
-          <label className={styles.label}>Titre*</label>
+          <label htmlFor="project-title" className={styles.label}>Titre*</label>
           <input
+            id="project-title"
             type="text"
             className={styles.input}
             value={title}
@@ -74,8 +75,9 @@ export default function ProjectModal({ project, onClose, onSave, allUsers = [] }
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Description*</label>
+          <label htmlFor="project-description" className={styles.label}>Description*</label>
           <textarea
+            id="project-description"
             className={styles.textarea}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -84,9 +86,10 @@ export default function ProjectModal({ project, onClose, onSave, allUsers = [] }
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Contributeurs</label>
+          <label htmlFor="project-contributors" className={styles.label}>Contributeurs</label>
           <div className={styles.inputField}>
             <select
+              id="project-contributors"
               className={styles.select}
               value=""
               onChange={(e) => {

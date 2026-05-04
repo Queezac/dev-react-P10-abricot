@@ -24,8 +24,9 @@ export default async function ProjectSettings({ params }) {
       <div className="card">
         <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label>Nom du projet :</label>
+            <label htmlFor="settings-project-name">Nom du projet :</label>
             <input
+              id="settings-project-name"
               type="text"
               defaultValue="Projet existant"
               style={{
@@ -38,8 +39,9 @@ export default async function ProjectSettings({ params }) {
             />
           </div>
           <div>
-            <label>Description :</label>
+            <label htmlFor="settings-project-desc">Description :</label>
             <textarea
+              id="settings-project-desc"
               defaultValue="Description actuelle du projet..."
               rows="4"
               style={{
@@ -102,9 +104,10 @@ export default async function ProjectSettings({ params }) {
           </div>
 
           <div style={{ marginTop: '1rem' }}>
-            <label>Ajouter un contributeur (email) :</label>
+            <label htmlFor="settings-add-contributor">Ajouter un contributeur (email) :</label>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
               <input
+                id="settings-add-contributor"
                 type="email"
                 placeholder="email@exemple.com"
                 style={{

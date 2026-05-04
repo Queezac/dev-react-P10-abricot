@@ -9,8 +9,9 @@ export default function NewProject() {
       <div className="card">
         <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label>Nom du projet :</label>
+            <label htmlFor="new-project-name">Nom du projet :</label>
             <input
+              id="new-project-name"
               type="text"
               placeholder="Ex: Refonte du site web"
               style={{
@@ -23,8 +24,9 @@ export default function NewProject() {
             />
           </div>
           <div>
-            <label>Description :</label>
+            <label htmlFor="new-project-desc">Description :</label>
             <textarea
+              id="new-project-desc"
               placeholder="Description de l'objectif du projet..."
               rows="4"
               style={{
@@ -39,8 +41,9 @@ export default function NewProject() {
           </div>
 
           <div>
-            <label>Inviter des contributeurs (emails):</label>
+            <label htmlFor="new-project-contributors">Inviter des contributeurs (emails):</label>
             <input
+              id="new-project-contributors"
               type="text"
               placeholder="Ex: bob@example.com, alice@example.com"
               style={{

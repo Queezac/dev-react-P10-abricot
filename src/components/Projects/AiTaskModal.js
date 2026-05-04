@@ -124,12 +124,14 @@ export default function AiTaskModal({
                       <div className={styles.editingForm}>
                         <input
                           type="text"
+                          aria-label="Nom de la tâche"
                           className={styles.editInput}
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
                           placeholder="Nom de la tâche"
                         />
                         <textarea
+                          aria-label="Description de la tâche"
                           className={styles.editTextarea}
                           value={editDesc}
                           onChange={(e) => setEditDesc(e.target.value)}
@@ -187,6 +189,7 @@ export default function AiTaskModal({
           <form className={styles.inputForm} onSubmit={handleGenerate}>
             <input
               type="text"
+              aria-label="Prompt IA"
               className={styles.input}
               placeholder="Décrivez les tâches que vous souhaitez ajouter..."
               value={prompt}

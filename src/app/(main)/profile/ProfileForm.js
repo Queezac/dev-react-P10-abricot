@@ -31,18 +31,19 @@ export default function ProfileForm({ user }) {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.field}>
-        <label className={styles.label}>Nom</label>
-        <input type="text" defaultValue={nom} className={styles.input} name="lastName" />
+        <label htmlFor="profile-lastName" className={styles.label}>Nom</label>
+        <input id="profile-lastName" type="text" defaultValue={nom} className={styles.input} name="lastName" />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Prénom</label>
-        <input type="text" defaultValue={prenom} className={styles.input} name="firstName" />
+        <label htmlFor="profile-firstName" className={styles.label}>Prénom</label>
+        <input id="profile-firstName" type="text" defaultValue={prenom} className={styles.input} name="firstName" />
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Email</label>
+        <label htmlFor="profile-email" className={styles.label}>Email</label>
         <input
+          id="profile-email"
           type="email"
           defaultValue={user.email}
           className={styles.input}
@@ -52,8 +53,9 @@ export default function ProfileForm({ user }) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Mot de passe actuel</label>
+        <label htmlFor="profile-currentPassword" className={styles.label}>Mot de passe actuel</label>
         <input
+          id="profile-currentPassword"
           type="password"
           placeholder="••••••••"
           className={styles.input}
@@ -62,8 +64,9 @@ export default function ProfileForm({ user }) {
       </div>
 
       <div className={styles.field}>
-        <label className={styles.label}>Nouveau mot de passe</label>
+        <label htmlFor="profile-newPassword" className={styles.label}>Nouveau mot de passe</label>
         <input
+          id="profile-newPassword"
           type="password"
           placeholder="••••••••"
           className={styles.input}
