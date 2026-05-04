@@ -5,24 +5,6 @@ import styles from './DashboardView.module.css';
 import TaskModal from './TaskModal';
 import { fetchAllUsersAction } from '@/app/actions/users';
 
-const ListIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="8" y1="6" x2="21" y2="6"></line>
-    <line x1="8" y1="12" x2="21" y2="12"></line>
-    <line x1="8" y1="18" x2="21" y2="18"></line>
-    <line x1="3" y1="6" x2="3.01" y2="6"></line>
-    <line x1="3" y1="12" x2="3.01" y2="12"></line>
-    <line x1="3" y1="18" x2="3.01" y2="18"></line>
-  </svg>
-);
-
-const KanbanIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-    <line x1="9" y1="3" x2="9" y2="21"></line>
-    <line x1="15" y1="3" x2="15" y2="21"></line>
-  </svg>
-);
 
 const SearchIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -31,26 +13,8 @@ const SearchIcon = () => (
   </svg>
 );
 
-const FolderIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-  </svg>
-);
 
-const CalendarIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-    <line x1="16" y1="2" x2="16" y2="6"></line>
-    <line x1="8" y1="2" x2="8" y2="6"></line>
-    <line x1="3" y1="10" x2="21" y2="10"></line>
-  </svg>
-);
 
-const MessageIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-  </svg>
-);
 
 const getStatusLabel = (status) => {
   switch (status) {
@@ -82,17 +46,17 @@ const TaskCard = ({ task, onEdit }) => (
     <div className={styles.cardBottom}>
       <div className={styles.metaInfo}>
         <div className={styles.metaItem}>
-          <FolderIcon />
+          <i className="fa-solid fa-folder-open" aria-hidden="true"></i>
           <span>{task.project?.name || 'Projet inconnu'}</span>
         </div>
         <span className={styles.separator}>|</span>
         <div className={styles.metaItem}>
-          <CalendarIcon />
+          <i className="fa-regular fa-calendar" aria-hidden="true"></i>
           <span>{formatDate(task.dueDate)}</span>
         </div>
         <span className={styles.separator}>|</span>
         <div className={styles.metaItem}>
-          <MessageIcon />
+          <img src="/img/icons/comment.svg" alt="Commentaires" width={14} height={14} />
           <span>{task.comments?.length || 0}</span>
         </div>
       </div>
@@ -138,14 +102,14 @@ export default function DashboardView({ initialTasks = [] }) {
           className={`${styles.toggleBtn} ${viewMode === 'list' ? styles.activeList : styles.toggleBtnHover}`}
           onClick={() => setViewMode('list')}
         >
-          <ListIcon />
+          <i className="fa-regular fa-square-check" aria-hidden="true"></i>
           Liste
         </button>
         <button
           className={`${styles.toggleBtn} ${viewMode === 'kanban' ? styles.activeKanban : styles.toggleBtnHover}`}
           onClick={() => setViewMode('kanban')}
         >
-          <KanbanIcon />
+          <i className="fa-regular fa-calendar" aria-hidden="true"></i>
           Kanban
         </button>
       </div>

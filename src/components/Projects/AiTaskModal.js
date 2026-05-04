@@ -103,9 +103,7 @@ export default function AiTaskModal({
         </button>
 
         <div className={styles.header}>
-          <svg className={styles.sparkleIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6L12 17.2l-6.2 4.5 2.4-7.6L2 9.6h7.6L12 2z" fill="#f97316" stroke="none" />
-          </svg>
+          <img src="/img/icons/ia.svg" alt="IA" className={styles.sparkleIcon} width={24} height={24} />
           <h2 className={styles.title}>
             {allTasks.length > 0 ? "Vos tâches..." : "Créer une tâche"}
           </h2>
@@ -148,12 +146,12 @@ export default function AiTaskModal({
                         <p className={styles.taskDesc}>{t.description}</p>
                         <div className={styles.taskActions}>
                           <button className={styles.actionBtn} onClick={() => handleRemove(t.isExisting ? t.id : t.localIndex, t.isExisting)}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <img src="/img/icons/delete.svg" alt="Supprimer" width={14} height={14} />
                             Supprimer
                           </button>
                           <span className={styles.divider}>|</span>
                           <button className={styles.actionBtn} onClick={() => startEdit(uniqueId, t.title, t.description)}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                            <img src="/img/icons/update.svg" alt="Modifier" width={14} height={14} />
                             Modifier
                           </button>
                         </div>
@@ -200,9 +198,7 @@ export default function AiTaskModal({
               className={styles.submitButton}
               disabled={!prompt.trim() || isLoading || isSaving}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <img src="/img/icons/ia.svg" alt="Ajouter" width={14} height={14} />
             </button>
           </form>
         </div>

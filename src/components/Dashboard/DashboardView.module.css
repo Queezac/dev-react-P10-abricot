@@ -44,11 +44,10 @@
   color: #D3590B;
 }
 
-/* List View Layout */
 .listContainer {
   background-color: white;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 2.5rem 4rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border, #e4e4e7);
 }

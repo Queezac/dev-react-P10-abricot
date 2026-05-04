@@ -24,18 +24,6 @@ const LayoutIcon = () => (
   </svg>
 );
 
-const FolderIcon = () => (
-  <svg
-    width="25"
-    height="25"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    stroke="none"
-    className={styles.icon}
-  >
-    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
-  </svg>
-);
 
 export default function Navbar({ user }) {
   const pathname = usePathname();
@@ -79,7 +67,7 @@ export default function Navbar({ user }) {
           href="/projects"
           className={`${styles.navLink} ${pathname?.startsWith('/projects') ? styles.active : ''}`}
         >
-          <FolderIcon />
+          <i className={`fa-solid fa-folder-open ${styles.icon}`} aria-hidden="true"></i>
           <span>Projets</span>
         </Link>
       </div>

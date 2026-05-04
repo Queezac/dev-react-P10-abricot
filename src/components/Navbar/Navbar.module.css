@@ -54,6 +54,7 @@
 
 .icon {
   flex-shrink: 0;
+  font-size: 20px;
 }
 
 .userActions {
