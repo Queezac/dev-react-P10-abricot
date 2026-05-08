@@ -208,6 +208,10 @@ export default function ProjectDetailView({ project, token, currentUser }) {
           <button className="btn btn-secondary" onClick={() => setTaskModalState({ isOpen: true, task: null })}>
             Créer une tâche
           </button>
+          <button className={styles.btnAI} onClick={() => setIsAiModalOpen(true)}>
+            <img src="/img/icons/ia.svg" alt="IA" className={styles.iconAI} width={16} height={16} />
+            IA
+          </button>
           <button
             onClick={handleDeleteProject}
             style={{ background: 'none', border: '1px solid #fca5a5', color: '#ef4444', borderRadius: '8px', padding: '0.5rem 1rem', fontSize: '0.875rem', cursor: 'pointer', transition: 'all 0.2s' }}
@@ -215,10 +219,6 @@ export default function ProjectDetailView({ project, token, currentUser }) {
             onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
           >
             Supprimer
-          </button>
-          <button className={styles.btnAI} onClick={() => setIsAiModalOpen(true)}>
-            <img src="/img/icons/ia.svg" alt="IA" className={styles.iconAI} width={16} height={16} />
-            IA
           </button>
         </div>
       </div>

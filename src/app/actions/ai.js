@@ -1,6 +1,6 @@
 'use server';
 
-import { createTaskAction } from './tasks';
+import { getProjectTasks } from './tasks';
 
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY;
 
@@ -10,13 +10,22 @@ export async function generateAITasksAction(projectId, prompt) {
   }
 
   try {
-    const mistralPrompt = `Tu es un assistant de gestion de projet. L'utilisateur veut créer des tâches avec la description suivante : "${prompt}".
-Génère une liste de tâches au format JSON strict. Le JSON doit être un tableau d'objets, chaque objet ayant les propriétés suivantes :
-- "title": Titre court et concis de la tâche (string).
-- "description": Description détaillée de la tâche (string).
-- "status": L'un des statuts suivants : "TODO", "IN_PROGRESS", "DONE" (string, par défaut "TODO").
+    const existingTasks = await getProjectTasks(projectId);
+    const existingTitles = existingTasks.map(t => t.title).join(', ');
 
-Ne renvoie QUE le JSON, sans aucun texte autour (pas de backticks, pas de markdown).`;
+    const mistralPrompt = `Tu es un assistant de gestion de projet.
+    
+    CONTEXTE DU PROJET :
+    Tâches déjà existantes : [${existingTitles || 'Aucune tâche pour le moment'}]
+
+    DEMANDE UTILISATEUR :
+    "${prompt}"
+
+    CONSIGNES STRICTES :
+    1. Analyse la demande : si l'utilisateur demande "une" tâche, n'en génère qu'UNE SEULE. S'il utilise le pluriel, décompose logiquement.
+    2. NE crée PAS de tâches qui existent déjà dans la liste ci-dessus.
+    3. Génère un tableau JSON d'objets avec : "title", "description", "status" ("TODO", "IN_PROGRESS", "DONE").
+    4. Ne renvoie QUE le JSON brut.`;
 
     const res = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
@@ -28,35 +37,37 @@ Ne renvoie QUE le JSON, sans aucun texte autour (pas de backticks, pas de markdo
         model: 'mistral-small-latest',
         messages: [{ role: 'user', content: mistralPrompt }],
         temperature: 0.3,
+        response_format: { type: 'json_object' }
       }),
     });
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error('Erreur API Mistral:', errorData);
-      return { error: 'Erreur lors de la communication avec l\'API IA' };
+      return { error: 'Erreur lors de la communication avec l\'API' };
     }
 
     const data = await res.json();
     let content = data.choices[0]?.message?.content || '[]';
 
-    content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+    content = content.trim();
+    if (content.startsWith('```')) {
+      content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+    }
 
-    let tasks;
+    let parsed;
     try {
-      tasks = JSON.parse(content);
+      parsed = JSON.parse(content);
+      const tasks = Array.isArray(parsed) ? parsed : (parsed.tasks || [parsed]);
+
+      if (tasks.length === 0) return { error: 'Aucune tâche générée' };
+
+      return { success: true, tasks };
     } catch (err) {
-      console.error('Erreur parsing JSON Mistral:', content);
-      return { error: 'Le format renvoyé par l\'IA est invalide' };
+      console.error('Erreur parsing:', content);
+      return { error: 'Format IA invalide' };
     }
 
-    if (!Array.isArray(tasks) || tasks.length === 0) {
-      return { error: 'Aucune tâche générée' };
-    }
-
-    return { success: true, tasks };
   } catch (error) {
-    console.error('Erreur generateAITasksAction:', error);
-    return { error: 'Erreur inattendue lors de la génération des tâches' };
+    console.error('Erreur:', error);
+    return { error: 'Erreur inattendue' };
   }
 }

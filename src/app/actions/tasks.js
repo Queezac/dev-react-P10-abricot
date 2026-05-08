@@ -117,3 +117,32 @@ export async function deleteTaskAction(projectId, taskId) {
     return { error: 'Impossible de joindre le serveur' };
   }
 }
+
+export async function getProjectTasks(projectId) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return [];
+    }
+
+    const res = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      cache: 'no-store'
+    });
+
+    if (!res.ok) {
+      return [];
+    }
+
+    const json = await res.json();
+    return json.data?.tasks || json.tasks || [];
+  } catch (err) {
+    console.error('Get tasks error:', err);
+    return [];
+  }
+}
